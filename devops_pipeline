@@ -1,0 +1,70 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout GIT') {
+            steps {
+                echo 'Pulling code from private repo'
+                git branch: 'bloc-management', 
+                    url: 'https://github.com/OnsFadhele/foyer-devops.git', 
+                    credentialsId: 'github-credentials'
+            }
+        }
+        stage('MVN clean') {
+            steps {
+                echo 'Cleaning project'
+                sh 'mvn clean'
+            }
+        }
+        stage('MVN compile') {
+            steps {
+                echo 'Compiling project'
+                sh 'mvn compile'
+            }
+        }
+        stage('SonarQube Analysis') {
+            steps {
+                withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+                    sh '''
+                        mvn sonar:sonar \
+                            -Dsonar.login=$SONAR_TOKEN
+                    '''
+                }
+                echo 'SonarQube analysis has been completed.'
+            }
+        }
+        stage('Test with Mockito') {
+            steps {
+                echo 'Running unit tests with Mockito'
+                sh 'mvn test'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying project'
+                sh 'mvn deploy -DskipTests'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                echo 'Building Docker image'
+                sh 'docker build -t lou4y/tp-foyer-bloc:latest .'
+            }
+        }
+        stage('Push Docker Image to Local Registry') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh '''
+                        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                        docker push lou4y/tp-foyer-bloc:latest
+                    '''
+                }
+            }
+        }
+        stage('Run Docker Compose') {
+            steps {
+                echo 'Running Docker Compose'
+                sh 'docker-compose up -d'
+            }
+        }
+    }
+}
