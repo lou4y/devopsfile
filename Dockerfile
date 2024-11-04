@@ -18,4 +18,4 @@ COPY . .
 EXPOSE 4200
 
 # Start the application.
-CMD ["ng", "serve"]
+CMD ["ng", "serve","--host", "0.0.0.0"]
