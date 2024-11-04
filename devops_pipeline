@@ -48,6 +48,7 @@ pipeline {
             steps {
                 echo 'Building Docker image'
                 sh 'docker build -t lou4y/tp-foyer-bloc:latest .'
+                sh 'docker build -t localhost:5000/lou4y/tp-foyer-bloc:latest .'
             }
         }
         stage('Push Docker Image to Local Registry') {
@@ -60,6 +61,13 @@ pipeline {
                 }
             }
         }
+        stage('Push Docker Image to Private Registry') {
+            steps {
+                echo 'Pushing Docker image to private registry'
+                sh 'docker push localhost:5000/lou4y/tp-foyer-bloc:latest'
+            }
+        }
+        
         stage('Run Docker Compose') {
             steps {
                 echo 'Running Docker Compose'
