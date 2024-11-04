@@ -1,0 +1,71 @@
+<h2>List of Blocs</h2>
+<button (click)="navigateToAddBloc()">Add Bloc</button>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Capacity</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let bloc of blocs">
+    <td>{{ bloc.id }}</td>
+    <td>{{ bloc.name }}</td>
+    <td>{{ bloc.capacity }}</td>
+    <td>
+      <button (click)="editBloc(bloc.id)">Edit</button>
+      <button (click)="deleteBloc(bloc.id)">Delete</button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<h2>Blocs Without Foyer</h2>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Capacity</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let bloc of blocsWithoutFoyer">
+    <td>{{ bloc.id }}</td>
+    <td>{{ bloc.name }}</td>
+    <td>{{ bloc.capacity }}</td>
+  </tr>
+  </tbody>
+</table>
+
+<h2>Search Blocs by Name and Capacity</h2>
+<form (submit)="searchBlocsByNomEtCap(nb.value, Number(cap.value))">
+  <div>
+    <label for="nb">Name</label>
+    <input id="nb" #nb type="text" />
+  </div>
+  <div>
+    <label for="cap">Capacity</label>
+    <input id="cap" #cap type="number" />
+  </div>
+  <button type="submit">Search</button>
+</form>
+
+<table *ngIf="searchResults.length > 0">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Capacity</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let bloc of searchResults">
+    <td>{{ bloc.id }}</td>
+    <td>{{ bloc.name }}</td>
+    <td>{{ bloc.capacity }}</td>
+  </tr>
+  </tbody>
+</table>

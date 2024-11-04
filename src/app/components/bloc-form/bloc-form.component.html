@@ -1,0 +1,12 @@
+<h2>{{ blocId ? 'Edit Bloc' : 'Add Bloc' }}</h2>
+<form [formGroup]="blocForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="name">Name</label>
+    <input id="name" formControlName="name" type="text" />
+  </div>
+  <div>
+    <label for="capacity">Capacity</label>
+    <input id="capacity" formControlName="capacity" type="number" />
+  </div>
+  <button type="submit">{{ blocId ? 'Update' : 'Add' }}</button>
+</form>
