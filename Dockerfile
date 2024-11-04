@@ -4,6 +4,9 @@ FROM node:22
 # Create and change to the app directory.
 WORKDIR /app
 
+# Install Angular CLI globally
+RUN npm install -g @angular/cli
+
 # Install app dependencies.
 COPY package.json package-lock.json ./
 RUN npm install
