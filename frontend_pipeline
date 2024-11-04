@@ -33,7 +33,7 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                sh 'docker push bloc-frontend-dev:latest'
+                sh 'docker push lou4y/bloc-frontend-dev:latest'
             }
         }
     }
