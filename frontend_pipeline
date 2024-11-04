@@ -22,7 +22,7 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t lou4y/bloc-frontend-dev:latest .'
+                sh 'docker build -t ${LOCAL_REGISTRY}/bloc-frontend-dev:latest .'
             }
         }
 
