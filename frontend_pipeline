@@ -6,9 +6,12 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout GIT') {
             steps {
-                sh 'git checkout ${GIT_COMMIT}'
+                echo 'Pulling code from private repo'
+                git branch: 'frontend', 
+                    url: 'https://github.com/lou4y/devopsfile.git', 
+                    credentialsId: 'github-credentials'
             }
         }
         stage('Install Dependencies') {
