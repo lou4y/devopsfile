@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        LOCAL_REGISTRY = 'localhost:5000'
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials') // Docker Hub credentials stored in Jenkins
     }
 
@@ -33,7 +34,7 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                sh 'docker push lou4y/bloc-frontend-dev:latest'
+                sh 'docker push ${LOCAL_REGISTRY}/bloc-frontend-dev:latest'
             }
         }
     }
