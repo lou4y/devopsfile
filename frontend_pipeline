@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials') // Docker Hub credentials stored in Jenkins
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                sh 'git checkout ${GIT_COMMIT}'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Run Unit Tests') {
+            steps {
+                sh 'npm test'
+            }
+        }
+
+        stage('Build Angular App') {
+            steps {
+                sh 'npm run build --prod'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t bloc-frontend-dev .'
+            }
+        }
+
+        stage('Login to Docker Hub') {
+            steps {
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                sh 'docker push bloc-frontend-dev:latest'
+            }
+        }
+    }
+}
