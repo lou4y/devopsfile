@@ -119,9 +119,10 @@ metadata:
   name: app-foyer-service
   namespace: dev
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
     - port: 8082
+      nodePort: 30002
   selector:
     app: app-foyer
 ---
@@ -155,8 +156,9 @@ metadata:
   name: frontend-service
   namespace: dev
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
     - port: 4200
+      nodePort: 30000
   selector:
     app: frontend
