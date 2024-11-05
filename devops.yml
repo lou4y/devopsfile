@@ -119,6 +119,7 @@ metadata:
   name: app-foyer-service
   namespace: dev
 spec:
+  type: LoadBalancer
   ports:
     - port: 8082
   selector:
@@ -141,7 +142,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: 10.0.0.18:5000/bloc-frontend-dev:latest
+          image: lou4y/bloc-frontend-dev:latest
           env:
             - name: API_URL
               value: http://app-foyer-service:8082/tpfoyer/bloc
@@ -154,6 +155,7 @@ metadata:
   name: frontend-service
   namespace: dev
 spec:
+  type: LoadBalancer
   ports:
     - port: 4200
   selector:
