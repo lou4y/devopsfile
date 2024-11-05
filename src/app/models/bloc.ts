@@ -1,6 +1,6 @@
 export interface Bloc {
-  id: number;
-  name: string;
-  capacity: number;
-  // Add other properties as needed
+  idBloc?: number;
+  nomBloc: string;
+  capaciteBloc: number;
+  foyer: object | null;
 }

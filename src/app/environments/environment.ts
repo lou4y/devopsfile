@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8082/tpfoyer/bloc'
+  apiUrl: 'http://10.0.0.18:8082/tpfoyer/bloc'
 };

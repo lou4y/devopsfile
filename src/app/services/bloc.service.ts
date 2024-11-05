@@ -13,6 +13,7 @@ export class BlocService {
   constructor(private http: HttpClient) { }
 
   getBlocs(): Observable<Bloc[]> {
+    console.log(this.http.get<Bloc[]>(`${this.apiUrl}/retrieve-all-blocs`).subscribe(data => console.log(data)));
     return this.http.get<Bloc[]>(`${this.apiUrl}/retrieve-all-blocs`);
   }
 
@@ -24,7 +25,7 @@ export class BlocService {
     return this.http.post<Bloc>(`${this.apiUrl}/add-bloc`, bloc);
   }
 
-  deleteBloc(id: number): Observable<void> {
+  deleteBloc(id: number | undefined): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/remove-bloc/${id}`);
   }
 

@@ -26,23 +26,40 @@ export class BlocFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.blocId = +!this.route.snapshot.paramMap.get('id');
+    // @ts-ignore
+    this.blocId = +this.route.snapshot.paramMap.get('id');
     if (this.blocId) {
       this.blocService.getBloc(this.blocId).subscribe((data: Bloc) => {
-        this.blocForm.patchValue(data);
+        this.blocForm.patchValue({
+          name: data.nomBloc,
+          capacity: data.capaciteBloc
+        });
+      }, error => {
+        console.error('Error fetching bloc:', error);
       });
     }
   }
 
   onSubmit(): void {
     if (this.blocForm.valid) {
+
+      const bloc: Bloc = {
+        idBloc: this.blocId ? this.blocId : undefined,
+        nomBloc: this.blocForm.value.name,
+        capaciteBloc: this.blocForm.value.capacity,
+        foyer: null // Assuming null; adjust as needed
+      };
+
       if (this.blocId) {
-        this.blocService.updateBloc({ id: this.blocId, ...this.blocForm.value })
-          .subscribe(() => this.router.navigate(['/']));
+        this.blocService.updateBloc(bloc).subscribe(() => this.router.navigate(['/']), error => {
+          console.error('Error updating bloc:', error);
+        });
       } else {
-        this.blocService.addBloc(this.blocForm.value)
-          .subscribe(() => this.router.navigate(['/']));
+        this.blocService.addBloc(bloc).subscribe(() => this.router.navigate(['/']), error => {
+          console.error('Error adding bloc:', error);
+        });
       }
     }
   }
+
 }

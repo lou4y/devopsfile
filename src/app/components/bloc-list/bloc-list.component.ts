@@ -9,17 +9,18 @@ import { Bloc } from '../../models/bloc';
   styleUrls: ['./bloc-list.component.css']
 })
 export class BlocListComponent implements OnInit {
-  blocs: Bloc[] = [];
+  blocs: Bloc[] | undefined = [];
   blocsWithoutFoyer: Bloc[] = [];
   searchResults: Bloc[] = [];
-
+block: Bloc | undefined;
   constructor(private blocService: BlocService, private router: Router) { }
 
-  ngOnInit(): void {
-    this.blocService.getBlocs().subscribe((data: Bloc[]) => {
-      this.blocs = data;
-    });
-
+  async ngOnInit(): Promise<void> {
+    this.blocs = await this.blocService.getBlocs().toPromise();
+    // @ts-ignore
+    this.block = this.blocs[0];
+    console.log(this.blocs);
+    console.log(this.block?.nomBloc);
     this.blocService.getBlocsWithoutFoyer().subscribe((data: Bloc[]) => {
       this.blocsWithoutFoyer = data;
     });
@@ -29,21 +30,28 @@ export class BlocListComponent implements OnInit {
     this.router.navigate(['/add-bloc']);
   }
 
-  editBloc(id: number): void {
+  editBloc(id: number | undefined): void {
     this.router.navigate([`/edit-bloc/${id}`]);
   }
 
-  deleteBloc(id: number): void {
+  deleteBloc(id: number | undefined): void {
     this.blocService.deleteBloc(id).subscribe(() => {
+      // @ts-ignore
       this.blocs = this.blocs.filter(bloc => bloc.id !== id);
     });
   }
 
   searchBlocsByNomEtCap(nb: string, cap: number): void {
-    this.blocService.getBlocsByNomEtCap(nb, cap).subscribe((data: Bloc[]) => {
-      this.searchResults = data;
-    });
+    this.blocService.getBlocsByNomEtCap(nb, Number(cap)).subscribe(
+      (data: Bloc[]) => {
+        this.searchResults = data;
+      },
+      error => {
+        console.error('Error fetching search results:', error);
+      }
+    );
   }
+
 
   protected readonly Number = Number;
 }
